@@ -55,9 +55,41 @@ function consultarApi(ciudad, pais) {
     fetch(url)
         .then(respuesta => respuesta.json())
         .then(datos => {
-            console.log(datos);
+            //limpiar html previo
+            limpiarHtml();
             if (datos.cod === "404") {
                 mostrarError('Ciudad no encontrada');
+                return;
             }
+            //imprime la rta en el html
+            mostrarClima(datos);
         })
+}
+
+function mostrarClima(datos) {
+    const { main: { temp, temp_max, temp_min } } = datos;
+    const centigrados = kelvinACentigrados(temp);
+
+    const actual = document.createElement('P');
+    actual.innerHTML = `${centigrados} &#8451;`;
+    actual.classList.add('font-bold', 'text-6xl');
+
+    const resultadoDiv = document.createElement('div');
+    resultadoDiv.classList.add('text-center', 'text-white');
+    resultadoDiv.appendChild(actual);
+
+    resultado.appendChild(resultadoDiv);
+    
+}
+
+const kelvinACentigrados = grados => parseInt(grados - 273.15);
+
+
+
+
+
+function limpiarHtml() {
+    while (resultado.firstChild) {
+        resultado.removeChild(resultado.firstChild);
+    }
 }
