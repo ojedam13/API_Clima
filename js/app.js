@@ -15,15 +15,16 @@ function buscarClima(e){
 
     if (ciudad === '' || pais === '') {
         //mostrar error
-        mostarError('Ambos campos son obligatorios');
+        mostrarError('Ambos campos son obligatorios');
 
         return;
     }
     //consultar API
+    consultarApi(ciudad, pais);
 
 }
 
-function mostarError(mensaje) {
+function mostrarError(mensaje) {
     const alerta = document.querySelector('.bg-red-100')
     if (!alerta) {
         //crear alerta
@@ -43,4 +44,20 @@ function mostarError(mensaje) {
         }, 3000);
     }
 
+}
+
+function consultarApi(ciudad, pais) {
+    
+    const appId = '748fb27f16ac183f1580bfd062196d8b';
+
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${ciudad},${pais}&appid=${appId}`;
+
+    fetch(url)
+        .then(respuesta => respuesta.json())
+        .then(datos => {
+            console.log(datos);
+            if (datos.cod === "404") {
+                mostrarError('Ciudad no encontrada');
+            }
+        })
 }
